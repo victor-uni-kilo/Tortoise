@@ -34,13 +34,15 @@ namespace Tortoise.Utility
 			if (regionCurveList == null || regionCurveList.Count == 0)
 				return false;
 
+			bool pointInside = false;
+
 			foreach (var ghCurve in regionCurveList)
 			{
-				if (!isPointInsideCurve(testPoint, ghCurve))
-					return false;
+				if (isPointInsideCurve(testPoint, ghCurve))
+					pointInside = true;
 			}
 
-			return true;
+			return pointInside;
 		}
 
 		public static bool isPointInsideCurvesTree(Point3d testPoint, GH_Structure<GH_Curve> regionCurvesTree)

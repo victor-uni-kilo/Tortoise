@@ -18,7 +18,7 @@ namespace Tortoise.Subdivision
 		{
 			// OUTPUT
 			List<GH_Curve> remainingShapesAsCurves = new List<GH_Curve>();
-
+			
 			// UNPACK THE LIST
 			List<Curve> subShapesAsCurves = new List<Curve>();
 
@@ -28,14 +28,14 @@ namespace Tortoise.Subdivision
 			}
 
 			// Union of the subShapesAsCurves list items
-			Curve[] shapeUnionArray = Curve.CreateBooleanUnion(subShapesAsCurves, 0.05);
+			Curve[] shapeUnionArray = Curve.CreateBooleanUnion(subShapesAsCurves, 0.01);
 
 			if (shapeUnionArray != null && shapeUnionArray.Length == 1)
 			{
 				Curve shapeUnionCurve = shapeUnionArray[0];
 
 				// Create boolean differences
-				Curve[] shapeDifferenceCurves = Curve.CreateBooleanDifference(parentShapeGHCurve.Value, shapeUnionCurve, 0.05);
+				Curve[] shapeDifferenceCurves = Curve.CreateBooleanDifference(parentShapeGHCurve.Value, shapeUnionCurve, 0.01);
 
 				// Add the resulting curves to subShapesAsCurves
 				foreach (var curveItem in shapeDifferenceCurves)

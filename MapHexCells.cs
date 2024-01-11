@@ -1,10 +1,31 @@
-using Grasshopper;
+﻿using Grasshopper;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 
 namespace Tortoise
+
+//███╗   ███╗ █████╗ ██████╗              
+//████╗ ████║██╔══██╗██╔══██╗             
+//██╔████╔██║███████║██████╔╝             
+//██║╚██╔╝██║██╔══██║██╔═══╝              
+//██║ ╚═╝ ██║██║  ██║██║                  
+//╚═╝     ╚═╝╚═╝  ╚═╝╚═╝                  
+                                        
+//██╗  ██╗███████╗██╗  ██╗                
+//██║  ██║██╔════╝╚██╗██╔╝                
+//███████║█████╗   ╚███╔╝                 
+//██╔══██║██╔══╝   ██╔██╗                 
+//██║  ██║███████╗██╔╝ ██╗                
+//╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝                
+                                        
+// ██████╗███████╗██╗     ██╗     ███████╗
+//██╔════╝██╔════╝██║     ██║     ██╔════╝
+//██║     █████╗  ██║     ██║     ███████╗
+//██║     ██╔══╝  ██║     ██║     ╚════██║
+//╚██████╗███████╗███████╗███████╗███████║
+// ╚═════╝╚══════╝╚══════╝╚══════╝╚══════╝
 {
     public class MapHexCells : GH_Component
     {
@@ -16,9 +37,13 @@ namespace Tortoise
         /// new tabs/panels will automatically be created.
         /// </summary>
         public MapHexCells()
-          : base("MapHexCells", "ASpi",
-            "Construct an Archimedean, or arithmetic, spiral given its radii and number of turns.",
-            "Curve", "Primitive")
+          : base(
+                 "Map Hex Cells",
+								 "MapHexCells",
+                 "Creates a map of cubic coordinates with an origin in a given cell.",
+								 "Tortoise",
+								 "Subdivision"
+								)
         {
         }
 

@@ -9,12 +9,13 @@ using Grasshopper.Kernel.Types;
 
 namespace Tortoise.Subdivision
 {
-	public static class HexagonShape
+	public static class Hexagon
 	{
 		public static List<GH_Curve> apothemSubdivision(Polyline parentHexagon, int hexAlongApothemCount)
 		{
 
 			GH_Curve parentHexagonGHCurve = new GH_Curve(parentHexagon.ToNurbsCurve());
+
 			List<GH_Curve> subdividedHexFragments = new List<GH_Curve>();
 
 			if (hexAlongApothemCount == 0)
@@ -24,19 +25,26 @@ namespace Tortoise.Subdivision
 			else
 			{
 				Point3d parentHexagonCentroid = new Point3d(parentHexagon.CenterPoint());
-				double inscribedDistance = (parentHexagon.SegmentAt(0).Length * Math.Sqrt(3)) / 2;
+				double parentHexagonRadius = parentHexagon.SegmentAt(0).Length;
+				double parentHexagonApothem = (parentHexagonRadius * Math.Sqrt(3)) / 2;
+				
+				double childHexApothem = parentHexagonApothem / (hexAlongApothemCount + 0.5);
+				double childHexRadius = childHexApothem / Math.Sqrt(3);
 
-				int apothemSubdivisionCount = hexAlongApothemCount + 1;
+				//SET TOLERANCE FOR FUTURE REFERENCE
+				//double referenceTolerance = childHexRadius / 10000000;
 
-				double hexApothem = inscribedDistance / (hexAlongApothemCount + 0.5);
-				double hexRadius = hexApothem / Math.Sqrt(3);
+				//getCopyAlongVectorCount
+				//WARNING: I AM USING INTEGER DIVISION HERE
+				int copyAlongVectorCount = hexAlongApothemCount + hexAlongApothemCount/3;
 
 				//// FIND THE CENTROIDS & DRAW THE HEXES
-				for (int i = 0; i <= apothemSubdivisionCount; i++)
+				for (int i = 0; i <= copyAlongVectorCount; i++)
 				{
 					if (i == 0)
 					{
-						GH_Curve newCentralHex = new GH_Curve(Draw.Fragment.Hexagon(parentHexagonCentroid, hexRadius));
+						// DRAW CENTER HEXAGON
+						GH_Curve newCentralHex = new GH_Curve(Draw.Fragment.Hexagon(parentHexagonCentroid, childHexRadius));
 						subdividedHexFragments.Add(newCentralHex);
 
 					}
@@ -63,7 +71,7 @@ namespace Tortoise.Subdivision
 							Vector3d translationVector = parentHexagonCentroid - parentSegmentMidpoint;
 							translationVector.Unitize();
 
-							double amplitude = hexApothem * i;
+							double amplitude = childHexApothem * i;
 
 							Point3d smallHexCentroid = new Point3d(parentHexagonCentroid);
 							smallHexCentroid.Transform(Transform.Translation(translationVector * amplitude));
@@ -83,7 +91,7 @@ namespace Tortoise.Subdivision
 										if (Utility.PointInsideRegionValidator.isPointInsideCurve(interPoint, parentHexagonGHCurve))
 										{
 											//childHexagonsCentroid.Add(interPoint);
-											GH_Curve newHex = new GH_Curve(Draw.Fragment.Hexagon(interPoint, hexRadius));
+											GH_Curve newHex = new GH_Curve(Draw.Fragment.Hexagon(interPoint, childHexRadius));
 											subdividedHexFragments.Add(newHex);
 										}
 
@@ -101,7 +109,8 @@ namespace Tortoise.Subdivision
 				}
 				// TRIGGER A FUCNTION TO FIND REMAINIG SHAPES - NEEDS CURVES
 				List<GH_Curve> remainingFragments = Helper.findRemainingFragments(subdividedHexFragments, parentHexagonGHCurve);
-				foreach (GH_Curve fragment in remainingFragments) {
+				foreach (GH_Curve fragment in remainingFragments)
+				{
 					subdividedHexFragments.Add(fragment);
 				}
 
